@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { auth } from '../../base';
 
@@ -8,7 +8,7 @@ export const Login = (): JSX.Element => {
 
   const login = (e: any): void => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password).then((authUser) => {
+    signInWithEmailAndPassword(auth, email, password).then((authUser) => {
       console.log(authUser);
     }).catch((error) => {
       alert(error.message);
