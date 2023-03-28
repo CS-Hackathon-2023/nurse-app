@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth } from '../../base';
+import { auth } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 export const SignUp = (): JSX.Element => {
