@@ -7,6 +7,7 @@ export const Login = (): JSX.Element => {
   const [password, setPassword] = useState('');
 
   const login = (e: any): void => {
+    console.log(`email: ${email}, password: ${password}`);
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password).then((authUser) => {
       console.log(authUser);
