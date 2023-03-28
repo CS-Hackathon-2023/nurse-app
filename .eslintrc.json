@@ -5,7 +5,8 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "standard-with-typescript"
+        "standard-with-typescript",
+        "prettier"
     ],
     "overrides": [
     ],
@@ -16,13 +17,24 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
         "@typescript-eslint/dot-notation": "error",
         // enable semi in my code
 
         "semi": "off",
-        "@typescript-eslint/semi": "off"
+        "@typescript-eslint/semi": "off",
+        "prettier/prettier": [
+            "error",
+            {
+                "semi": true,
+                "singleQuote": true,
+                "trailingComma": "all",
+                "printWidth": 120,
+                "tabWidth": 4
+            }
+        ],
     }
 }
