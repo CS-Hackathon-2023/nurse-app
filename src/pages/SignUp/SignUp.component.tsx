@@ -7,6 +7,8 @@ export const SignUp = (): JSX.Element => {
   const [password, setPassword] = useState('');
 
   const signUp = (e: any): void => {
+    console.log(`email: ${email}, password: ${password}`);
+    e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password).then((authUser) => {
       console.log(authUser);
     }).catch((error) => {
