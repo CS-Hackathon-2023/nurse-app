@@ -1,21 +1,38 @@
 import { useState, useEffect } from 'react'
-import { type TApiResponse, useApiGet } from './useApiGet'
-import { useInterval } from './useInterval'
+import { type TApiResponse } from './useApiGet'
 
 export const usePolling = (url: string, pollingInterval: number): TApiResponse | undefined => {
-  const [response, setResponse] = useState<TApiResponse>()
-
-  const { status, statusText, data, error, loading } = useApiGet(url)
+  const [response, setResponse] = useState<TApiResponse>();
 
   useEffect(() => {
-    setResponse({ status, statusText, data, error, loading })
-  }, [status, statusText, data, error, loading])
+    const getAPIData = async (url: string): Promise<void> => {
+      const newResponse: TApiResponse = {
+        status: 0,
+        statusText: '',
+        data: null,
+        error: null,
+        loading: true
+      };
 
-  useInterval(() => {
-    // Call the useApiGet hook again to fetch updated data
-    const { status, statusText, data, error, loading } = useApiGet(url)
-    setResponse({ status, statusText, data, error, loading })
-  }, pollingInterval)
+      try {
+        const apiResponse = await fetch(url);
+        const json = await apiResponse.json();
+        newResponse.status = apiResponse.status;
+        newResponse.statusText = apiResponse.statusText;
+        newResponse.data = json;
+      } catch (error) {
+        newResponse.error = error;
+      }
 
-  return response
-}
+      newResponse.loading = false;
+      setResponse(newResponse);
+    };
+    const intervalId = setInterval(() => {
+      getAPIData(url).catch((error) => { console.error(error); });
+    }, pollingInterval);
+
+    return () => { clearInterval(intervalId); };
+  }, [url, pollingInterval]);
+
+  return response;
+};
