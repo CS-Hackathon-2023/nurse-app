@@ -1,7 +1,7 @@
 export interface Request {
   requestId: string
   userId: string
-  departure: string
+  ward: string
   requestType: string
   requestDetail: string
   status: string

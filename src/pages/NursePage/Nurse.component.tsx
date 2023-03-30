@@ -20,7 +20,7 @@ import { type Request } from '../../Types/Request';
 export const NursePage = (): JSX.Element => {
   const [requests, setRequests] = useState([]);
   const url = 'https://jsonplaceholder.typicode.com/todos/1';
-  const pollingInterval = 15000; // 15 seconds in milliseconds
+  const pollingInterval = 10000; // 15 seconds in milliseconds
   const response = usePolling(url, pollingInterval);
 
   useEffect(() => {
