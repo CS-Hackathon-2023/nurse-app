@@ -9,12 +9,13 @@ export const Login = (): JSX.Element => {
   const login = (e: any): void => {
     console.log(`email: ${email}, password: ${password}`);
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password).then((authUser) => {
-      console.log(authUser);
-    }).catch((error) => {
-      alert(error.message);
-    }
-    );
+    signInWithEmailAndPassword(auth, email, password)
+      .then((authUser) => {
+        console.log(authUser);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
 
   return (
@@ -25,12 +26,18 @@ export const Login = (): JSX.Element => {
                     type={'email'}
                     placeholder={'Email'}
                     value={email}
-                    onChange={(e) => { setEmail(e.target.value); }} />
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                />
                 <input
                     type={'password'}
                     placeholder={'Password'}
                     value={password}
-                    onChange={(e) => { setPassword(e.target.value); }} />
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                />
                 <button type={'submit'}>Login</button>
             </form>
         </div>
