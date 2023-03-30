@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-function App() {
+import './App.css';
+import React from 'react';
+// import { usePolling } from './hooks/usePolling';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/Home/Home.component';
+import { Login } from './pages/Login/Login.component';
+import { SignUp } from './pages/SignUp/SignUp.component';
+
+function App (): JSX.Element {
+  // const url = 'https://jsonplaceholder.typicode.com/todos/1';
+  // const pollingInterval = 15000; // 15 seconds in milliseconds
+
+  // const response = usePolling(url, pollingInterval);
+  // if (response == null) {
+  //   return <p>Loading...</p>;
+  // }
+
+  // if (response.error) {
+  //   return <p>Error: {response.error.message}</p>;
+  // }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+          <Route path="/" Component={Home} />
+          <Route path="/login" Component={Login} />
+          <Route path="/signup" Component={SignUp} />
+      </Routes>
+    </Router>
   );
 }
 
