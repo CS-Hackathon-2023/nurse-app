@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { type TApiResponse } from './useApiGet';
 import { db } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { type IRequest, type IUser, type ICard } from '../Types/Request.types';
 // query, where
 
-export const usePolling = (url: string, pollingInterval: number): TApiResponse | undefined => {
+export const usePolling = (ward: string, pollingInterval: number): TApiResponse | undefined => {
   const [response, setResponse] = useState<TApiResponse>();
-  // const requestRef = collection(db, 'requets');
+  const requestRef = collection(db, 'Requests');
+  const userRef = collection(db, 'Users');
 
   useEffect(() => {
-    const getAPIData = async (url: string): Promise<void> => {
+    const getRequestsByWard = async (ward: string): Promise<void> => {
       const newResponse: TApiResponse = {
         status: 0,
         statusText: '',
@@ -19,20 +21,33 @@ export const usePolling = (url: string, pollingInterval: number): TApiResponse |
       };
 
       try {
-        // const q = db.collectionGroup().get();
-        const querySnapshot = await getDocs(collection(db, 'Requests'));
-        console.log('querySnapshot');
-        console.log(querySnapshot);
-        // const snapshot = await getDocs(q);
-        const snapshot = querySnapshot;
-        console.log('snapshot');
-        console.log(snapshot);
-        console.log(`Length of snapshot: ${snapshot.docs.length}`)
-        snapshot.forEach((doc) => {
-          console.log(doc.id, '=>', doc.data());
+        const getReuqestQuery = query(requestRef, where('ward', '==', ward));
+        const requestDocs = await getDocs(getReuqestQuery);
+        console.log('requestDocs');
+        console.log(requestDocs);
+        console.log(`requestDocs.docs length: ${requestDocs.docs.length}`);
+        const requestPromises = requestDocs.docs.map(async (requestDoc) => {
+          const request = requestDoc.data() as IRequest;
+          const getUserQuery = query(userRef, where('userId', '==', request.userId));
+          const userDocs = await getDocs(getUserQuery);
+          const user = userDocs.docs[0].data() as IUser;
+          const sevirity = request?.severity ?? 'High';
+          return {
+            requestId: request.requestId,
+            userId: request.userId,
+            name: user.name,
+            age: user.age,
+            clientId: user.clientId,
+            ward: user.ward,
+            room: user.room,
+            requestType: request.requestType,
+            requestDetail: request.requestDetail,
+            status: request.status,
+            severity: sevirity
+          };
         });
-        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        newResponse.data = data;
+        const cards: ICard[] = await Promise.all(requestPromises);
+        newResponse.data = cards;
       } catch (error) {
         newResponse.error = error;
         console.log('error');
@@ -43,11 +58,11 @@ export const usePolling = (url: string, pollingInterval: number): TApiResponse |
       setResponse(newResponse);
     };
     const intervalId = setInterval(() => {
-      getAPIData(url).catch((error) => { console.error(error); });
+      getRequestsByWard(ward).catch((error) => { console.error(error); });
     }, pollingInterval);
 
     return () => { clearInterval(intervalId); };
-  }, [url, pollingInterval]);
+  }, [ward, pollingInterval]);
 
   return response;
 };

@@ -10,8 +10,10 @@ export const SignUp = (): JSX.Element => {
     console.log(`email: ${email}, password: ${password}`);
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password).then((authUser) => {
+      console.log('authUser: ');
       console.log(authUser);
     }).catch((error) => {
+      console.log('error:');
       console.error(error);
     });
   };
